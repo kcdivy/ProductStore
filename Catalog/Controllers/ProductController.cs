@@ -36,7 +36,6 @@ namespace Catalog.Controllers
             var id = this.productRepository.Add(product);
 
             NewProductEvent newProductEvent = converter.CommandToEvent(product);
-            newProductEvent.ProductId = Guid.Parse(id);
             eventEmitter.EmitProductAddedEvent(newProductEvent);
 
             return Ok(id);

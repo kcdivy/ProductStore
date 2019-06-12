@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ProductQueryApi.Events;
+﻿using EventSubscriber.Events;
 
-namespace ProductQueryApi.Queues
+namespace EventSubscriber.Interfaces
 {
     public delegate void ProductAddedEventReceivedDelegate(NewProductEvent evt);
 

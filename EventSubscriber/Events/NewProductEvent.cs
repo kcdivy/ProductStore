@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
-namespace Catalog.Events
+namespace EventSubscriber.Events
 {
     public class NewProductEvent
     {
@@ -16,10 +12,5 @@ namespace Catalog.Events
         public string CatagoryCode { get; set; }
         public string CatagoryName { get; set; }
         public string CatagoryDesc { get; set; }
-
-        public string toJson()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
     }
 }

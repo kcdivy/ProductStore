@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using ProductQueryApi.Models;
-using ProductQueryApi.Repository;
-using System;
+using ProductRepository.Interfaces;
+using ProductRepository.Models;
 using System.Collections.Generic;
 
-namespace ProductQueryApi.Controllers
+namespace ProductRepository.Controllers
 {
     [Route("api/[controller]")]
     public class ProductController : Controller
@@ -18,7 +17,7 @@ namespace ProductQueryApi.Controllers
         }
 
         [HttpGet]
-        public ICollection<Product> All()
+        public ICollection<ProductReadModel> All()
         {
             return this.productRepository.GetAll();
         }

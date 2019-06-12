@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using EventSubscriber.Configuration;
+using EventSubscriber.Events;
+using EventSubscriber.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using ProductQueryApi.Events;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace ProductQueryApi.Queues.AMQP
+namespace EventSubscriber.Queues.AMQP
 {
     public class AMQPEventSubscriber : IEventSubscriber
     {
@@ -50,10 +48,7 @@ namespace ProductQueryApi.Queues.AMQP
                 var msg = Encoding.UTF8.GetString(body);
                 var evt = JsonConvert.DeserializeObject<NewProductEvent>(msg);
                 logger.LogInformation($"Received incoming event, {body.Length} bytes.");
-                if (ProductAddedEventReceived != null)
-                {
-                    ProductAddedEventReceived(evt);
-                }
+                ProductAddedEventReceived?.Invoke(evt);
                 channel.BasicAck(ea.DeliveryTag, false);
             };
         }

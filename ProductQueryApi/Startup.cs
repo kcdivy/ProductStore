@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ProductQueryApi.Events;
-using ProductQueryApi.Models;
-using ProductQueryApi.Queues;
-using ProductQueryApi.Queues.AMQP;
-using ProductQueryApi.Repository;
+using EventSubscriber.Events;
+using EventSubscriber.Configuration;
+using EventSubscriber.Queues.AMQP;
+using ProductRepository.Repository;
 using RabbitMQ.Client;
+using EventSubscriber.Interfaces;
+using ProductRepository.Interfaces;
 using RabbitMQ.Client.Events;
 
-namespace ProductQueryApi
+namespace ProductRepository
 {
     public class Startup
     {
@@ -41,11 +37,10 @@ namespace ProductQueryApi
             services.AddOptions();
 
             services.AddSingleton<IProductRepository, ProductMemoryRepository>();
-
+            services.AddTransient(typeof(EventingBasicConsumer), typeof(AMQPEventingConsumer));
             services.Configure<QueueOptions>(Configuration.GetSection("QueueOptions"));
             services.Configure<AMQPOptions>(Configuration.GetSection("amqp"));
             services.AddTransient(typeof(IConnectionFactory), typeof(AMQPConnectionFactory));
-            services.AddTransient(typeof(EventingBasicConsumer), typeof(AMQPEventingConsumer));
             services.AddSingleton(typeof(IEventSubscriber), typeof(AMQPEventSubscriber));
             services.AddSingleton(typeof(IEventProcessor), typeof(NewProductEventProcessor));
         }

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EventSubscriber.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ProductQueryApi.Models;
 using RabbitMQ.Client;
 
-namespace ProductQueryApi.Queues.AMQP
+namespace EventSubscriber.Queues.AMQP
 {
     public class AMQPConnectionFactory : ConnectionFactory
     {

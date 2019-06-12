@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EventSubscriber.Interfaces;
 using Microsoft.Extensions.Logging;
-using ProductQueryApi.Models;
-using ProductQueryApi.Queues;
-using ProductQueryApi.Repository;
+using ProductRepository.Interfaces;
+using ProductRepository.Models;
 
-namespace ProductQueryApi.Events
+namespace EventSubscriber.Events
 {
     public class NewProductEventProcessor : IEventProcessor
     {
@@ -24,11 +20,16 @@ namespace ProductQueryApi.Events
             this.subscriber = eventSubscriber;
             this.subscriber.ProductAddedEventReceived += (prd) => {
 
-                productRepository.Add(new Product()
+                productRepository.Add(new ProductReadModel()
                 {
-                    Name = prd.Name,
+                    ProductName = prd.ProductName,
                     ProductId = prd.ProductId,
-                    Category = prd.Category
+                    Description = prd.Description,
+                    Price = prd.Price,
+                    CatagoryId = prd.CatagoryId,
+                    CatagoryCode = prd.CatagoryCode,
+                    CatagoryDesc = prd.CatagoryDesc,
+                    CatagoryName = prd.CatagoryName
                 });
             };
         }
