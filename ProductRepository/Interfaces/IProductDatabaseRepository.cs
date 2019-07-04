@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using ProductQueryModels;
-using ProductRepository.Models;
+﻿using ProductQueryModels;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ProductRepository.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductDatabaseRepository
     {
-        //ICollection<ProductReadModel> GetAll();
-
-        //void Add(ProductReadModel product);
         IEnumerable<Product> GetAllProducts();
 
         void AddProduct(Product product);
@@ -22,6 +20,5 @@ namespace ProductRepository.Interfaces
         Catagory GetCatagoryById(int id);
 
         IEnumerable<Product> GetSearchedProducts(string searchedCriteria);
-
     }
 }

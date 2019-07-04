@@ -19,18 +19,26 @@ namespace EventSubscriber.Events
             this.logger = logger;
             this.subscriber = eventSubscriber;
             this.subscriber.ProductAddedEventReceived += (prd) => {
-
-                productRepository.Add(new ProductReadModel()
+                if (prd?.Product != null)
                 {
-                    ProductName = prd.ProductName,
-                    ProductId = prd.ProductId,
-                    Description = prd.Description,
-                    Price = prd.Price,
-                    CatagoryId = prd.CatagoryId,
-                    CatagoryCode = prd.CatagoryCode,
-                    CatagoryDesc = prd.CatagoryDesc,
-                    CatagoryName = prd.CatagoryName
-                });
+                    productRepository.AddProduct(prd.Product);
+                }
+                else if (prd?.Catagory != null)
+                {
+                    productRepository.AddCatagory(prd.Catagory);
+                }
+
+                //productRepository.Add(new ProductReadModel()
+                //{
+                //    ProductName = prd.ProductName,
+                //    ProductId = prd.ProductId,
+                //    Description = prd.Description,
+                //    Price = prd.Price,
+                //    CatagoryId = prd.CatagoryId,
+                //    CatagoryCode = prd.CatagoryCode,
+                //    CatagoryDesc = prd.CatagoryDesc,
+                //    CatagoryName = prd.CatagoryName
+                //});
             };
         }
 

@@ -11,6 +11,8 @@ using RabbitMQ.Client;
 using EventSubscriber.Interfaces;
 using ProductRepository.Interfaces;
 using RabbitMQ.Client.Events;
+using Database;
+using ProductQueryModels;
 
 namespace ProductRepository
 {
@@ -36,13 +38,15 @@ namespace ProductRepository
             services.AddMvc();
             services.AddOptions();
 
-            services.AddSingleton<IProductRepository, ProductMemoryRepository>();
+            services.AddSingleton<IProductRepository, ProductDatabaseRepository>();
             services.AddTransient(typeof(EventingBasicConsumer), typeof(AMQPEventingConsumer));
             services.Configure<QueueOptions>(Configuration.GetSection("QueueOptions"));
             services.Configure<AMQPOptions>(Configuration.GetSection("amqp"));
             services.AddTransient(typeof(IConnectionFactory), typeof(AMQPConnectionFactory));
             services.AddSingleton(typeof(IEventSubscriber), typeof(AMQPEventSubscriber));
             services.AddSingleton(typeof(IEventProcessor), typeof(NewProductEventProcessor));
+            services.AddTransient(typeof(IProductDatabase), typeof(ProductLiteDB));
+            services.AddTransient(typeof(IDatabase<Catagory>), typeof(CatagoryLiteDB));
         }
 
         // Singletons are lazy instantiation.. so if we don't ask for an instance during startup,
