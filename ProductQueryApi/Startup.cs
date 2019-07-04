@@ -13,6 +13,7 @@ using ProductRepository.Interfaces;
 using RabbitMQ.Client.Events;
 using Database;
 using ProductQueryModels;
+using ProductQueryApi.Cache;
 
 namespace ProductRepository
 {
@@ -47,6 +48,9 @@ namespace ProductRepository
             services.AddSingleton(typeof(IEventProcessor), typeof(NewProductEventProcessor));
             services.AddTransient(typeof(IProductDatabase), typeof(ProductLiteDB));
             services.AddTransient(typeof(IDatabase<Catagory>), typeof(CatagoryLiteDB));
+
+            services.AddMemoryCache();
+            services.AddSingleton<IProductCache, MemoryProductCache>();
         }
 
         // Singletons are lazy instantiation.. so if we don't ask for an instance during startup,

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProductQueryApi.Cache;
 using ProductQueryModels;
 using ProductRepository.Interfaces;
 using ProductRepository.Models;
@@ -10,11 +11,13 @@ namespace ProductRepository.Controllers
     public class ProductController : Controller
     {
         private IProductRepository productRepository;
+        private IProductCache productCache;
 
         public ProductController( 
-            IProductRepository productRepository)
+            IProductRepository productRepository,IProductCache productCache)
         {
             this.productRepository = productRepository;
+            this.productCache = productCache;
         }
 
         //[HttpGet]
@@ -26,13 +29,24 @@ namespace ProductRepository.Controllers
         [HttpGet]
         public IEnumerable<Product> All()
         {
+            var products=this.productCache.GetProducts();
+            if(products.Count != 0)
+            {
+                return products;
+            }
             return this.productRepository.GetAllProducts();
+            
         }
 
         [HttpGet]
         [Route("GetSpecificProduct")]
         public Product GetSpecificProduct([FromQuery] int id)
         {
+            var product = this.productCache.Get(id);
+            if(product != null)
+            {
+                return product;
+            }
             return this.productRepository.GetProductById(id);
         }
 

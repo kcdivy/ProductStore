@@ -1,5 +1,6 @@
 ﻿using EventSubscriber.Interfaces;
 using Microsoft.Extensions.Logging;
+using ProductQueryApi.Cache;
 using ProductRepository.Interfaces;
 using ProductRepository.Models;
 
@@ -13,7 +14,8 @@ namespace EventSubscriber.Events
         public NewProductEventProcessor(
             ILogger<NewProductEventProcessor> logger,
             IEventSubscriber eventSubscriber,
-            IProductRepository productRepository
+            IProductRepository productRepository,
+            IProductCache productCache
         )
         {
             this.logger = logger;
@@ -22,11 +24,13 @@ namespace EventSubscriber.Events
                 if (prd?.Product != null)
                 {
                     productRepository.AddProduct(prd.Product);
+                    productCache.Put(prd.Product);
                 }
                 else if (prd?.Catagory != null)
                 {
                     productRepository.AddCatagory(prd.Catagory);
                 }
+
 
                 //productRepository.Add(new ProductReadModel()
                 //{
