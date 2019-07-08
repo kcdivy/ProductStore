@@ -23,5 +23,7 @@ namespace ProductRepository.Interfaces
 
         IEnumerable<Product> GetSearchedProducts(string searchedCriteria);
 
+        Catagory GetCatagoryByName(string name);
+
     }
 }

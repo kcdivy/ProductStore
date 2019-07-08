@@ -12,9 +12,10 @@ namespace Catalog.Models
         {
             var newproductEvent = new NewProductEvent()
             {
-                ProductName = product.Name,
-                ProductId = new Random(2000).Next(6000),
-                CatagoryName = product.Category
+                ProductName = product.ProductName,
+                ProductId = product.ProductId,
+                CatagoryName = product.CatagoryName,
+                CatagoryId = product.CatagoryId
             };
 
             return newproductEvent;

@@ -10,8 +10,5 @@ namespace ProductQueryModels
         public string Description { get; set; }
         public int Price { get; set; }
         public int CatagoryId { get; set; }
-        public Catagory Catagory { get; set; }
-
-
     }
 }

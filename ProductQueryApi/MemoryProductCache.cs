@@ -13,21 +13,25 @@ namespace ProductQueryApi.Cache
     {
         private IMemoryCache _cache;
 
+        private IList<Product> _allProducts;
 
         public MemoryProductCache(IMemoryCache cache)
         {
             _cache = cache;
+            _allProducts = new List<Product>();
+
         }
 
         public IList<Product> GetProducts()
         {
-            return new List<Product>();
+            return _allProducts;   
         }
 
         public void Put(Product product)
         {
             _cache.Set(product.ProductId, product,
                 new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(1)));
+            _allProducts.Add(product);
         }
 
         public Product Get(int productId)

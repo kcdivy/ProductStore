@@ -46,10 +46,17 @@ namespace EventSubscriber.Queues.AMQP
             {
                 var body = ea.Body;
                 var msg = Encoding.UTF8.GetString(body);
-                var evt = JsonConvert.DeserializeObject<NewProductEvent>(msg);
-                logger.LogInformation($"Received incoming event, {body.Length} bytes.");
-                ProductAddedEventReceived?.Invoke(evt);
-                channel.BasicAck(ea.DeliveryTag, false);
+                try
+                {
+                    var evt = JsonConvert.DeserializeObject<NewProductEvent>(msg);
+                    logger.LogInformation($"Received incoming event, {body.Length} bytes.");
+                    ProductAddedEventReceived?.Invoke(evt);
+                    channel.BasicAck(ea.DeliveryTag, false);
+                }
+                catch
+                {
+                    channel.BasicAck(ea.DeliveryTag, false);
+                }
             };
         }
 

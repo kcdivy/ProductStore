@@ -36,9 +36,10 @@ namespace ProductRepository
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc();
             services.AddOptions();
-
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IProductRepository, ProductDatabaseRepository>();
             services.AddTransient(typeof(EventingBasicConsumer), typeof(AMQPEventingConsumer));
             services.Configure<QueueOptions>(Configuration.GetSection("QueueOptions"));
@@ -47,7 +48,7 @@ namespace ProductRepository
             services.AddSingleton(typeof(IEventSubscriber), typeof(AMQPEventSubscriber));
             services.AddSingleton(typeof(IEventProcessor), typeof(NewProductEventProcessor));
             services.AddTransient(typeof(IProductDatabase), typeof(ProductLiteDB));
-            services.AddTransient(typeof(IDatabase<Catagory>), typeof(CatagoryLiteDB));
+            services.AddTransient(typeof(ICatagoryDatabase), typeof(CatagoryLiteDB));
 
             services.AddMemoryCache();
             services.AddSingleton<IProductCache, MemoryProductCache>();
@@ -60,8 +61,12 @@ namespace ProductRepository
             ILoggerFactory loggerFactory,
             IEventProcessor eventProcessor)
         {
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
             app.UseMvc();
-
             eventProcessor.Start();
         }
     }

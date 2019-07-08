@@ -16,10 +16,10 @@ namespace EventSubscriber.Queues.AMQP
         {
             this.amqpOptions = serviceOptions.Value;
 
-            this.UserName = amqpOptions.Username;
-            this.Password = amqpOptions.Password;
-            this.VirtualHost = amqpOptions.VirtualHost;
-            this.HostName = amqpOptions.HostName;
+            //this.UserName = amqpOptions.Username;
+            //this.Password = amqpOptions.Password;
+            //this.VirtualHost = amqpOptions.VirtualHost;
+            //this.HostName = amqpOptions.HostName;
             this.Uri = new Uri(amqpOptions.Uri);
 
             logger.LogInformation($"AMQP Connection configured for URI : {amqpOptions.Uri}");

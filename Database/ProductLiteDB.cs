@@ -36,10 +36,10 @@ namespace Database
             {
                 var products = db.GetCollection<Product>();
                 var retrievedProducts = products.Find(prod => prod.ProductName.Contains(searchedCriteria)
-                                                             || prod.Description.Contains(searchedCriteria)
-                                                             || prod.Catagory.CatagoryName.Contains(searchedCriteria)
-                                                             || prod.Catagory.CatagoryDesc.Contains(searchedCriteria)
-                                                             || prod.Catagory.CatagorCode.Contains(searchedCriteria)).ToList();
+                                                             || prod.Description.Contains(searchedCriteria));
+                                                             //|| prod.Catagory.CatagoryName.Contains(searchedCriteria)
+                                                             //|| prod.Catagory.CatagoryDesc.Contains(searchedCriteria)
+                                                             //|| prod.Catagory.CatagoryCode.Contains(searchedCriteria)).ToList();
                 return retrievedProducts;
             }
         }

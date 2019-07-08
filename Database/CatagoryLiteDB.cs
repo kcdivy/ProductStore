@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Database
 {
-    public class CatagoryLiteDB : GenericLiteDB<Catagory>
+    public class CatagoryLiteDB : GenericLiteDB<Catagory>, ICatagoryDatabase
     {
         public override void Delete(Catagory entity, string connectionString)
         {
@@ -26,5 +26,16 @@ namespace Database
                 return retrievedCategory;
             }
         }
+
+        public Catagory GetByName(object name, string connectionString)
+        {
+            using (var db = new LiteDatabase(connectionString))
+            {
+                var categories = db.GetCollection<Catagory>();
+                var retrievedCategory = categories.FindOne(p => p.CatagoryName.Equals(name.ToString()));
+                return retrievedCategory;
+            }
+        }
+
     }
 }

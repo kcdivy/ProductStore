@@ -14,24 +14,18 @@ namespace ProductRepository.Repository
 
         IProductDatabase productDatabase;
 
-        IDatabase<Catagory> catagoryDatabase;
+        ICatagoryDatabase catagoryDatabase;
 
         IConfiguration Configuration { get; set; }
 
         string connectionstring;
-        public ProductDatabaseRepository(IProductDatabase database, IConfiguration configuration, IDatabase<Catagory> categoryDatabase)
+        public ProductDatabaseRepository(IProductDatabase database, IConfiguration configuration, ICatagoryDatabase categoryDatabase)
         {
             this.productDatabase = database;
             this.catagoryDatabase = categoryDatabase;
             this.Configuration = configuration;
-            this.connectionstring = Configuration["ConnectionString:DefaultConnection"];
-            //productList =  new List<Product>()
-            //{
-            //    new Product() { Name = "book 1", ProductId = Guid.Parse("ef29fc61-abcc-4ac1-9c8c-e5e17b266868"), Category = "ab"},
-            //    new Product() { Name = "book 2", ProductId = Guid.Parse("618808a6-8466-4fd8-80da-e8651ec0c0e4"), Category = "bc"},
-            //    new Product() { Name = "book 3", ProductId = Guid.Parse("dc2bd686-7eaf-44a3-9fdd-b3645fef9a02"), Category = "cd"},
-            //    new Product() { Name = "book 4", ProductId = Guid.Parse("d91d2019-e642-4b00-8b10-2bf07c383787"), Category = "de"}
-            //};
+            this.connectionstring = Configuration["ConnectionStrings:DefaultConnection"];
+
         }
 
         public IEnumerable<Product> GetAllProducts()
@@ -65,6 +59,12 @@ namespace ProductRepository.Repository
         {
             return this.catagoryDatabase.GetById(id, connectionstring);
         }
+
+        public Catagory GetCatagoryByName(string name)
+        {
+            return this.catagoryDatabase.GetByName(name, connectionstring);
+        }
+
         public void AddCatagory(Catagory catagory)
         {
             this.catagoryDatabase.Insert(catagory, connectionstring);
