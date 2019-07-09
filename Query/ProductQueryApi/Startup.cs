@@ -54,7 +54,7 @@ namespace ProductRepository
         {
             app.UseMvc();
 
-            eventProcessor.Start();
+          //  eventProcessor.Start();
         }
     }
 }

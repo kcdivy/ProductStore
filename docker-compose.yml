@@ -1,0 +1,35 @@
+version: '3.0'
+
+services:
+  catalogservice:
+    image: kcdivya/catalog:1.2
+    ports:
+      - "4000:4000"
+    networks:
+      - backend
+    depends_on:
+      - rabbitmq
+
+  queryservice:
+    image: kcdivya/query:1.0
+    ports:
+      - "5000:80"
+    networks:
+      - backend
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+
+volumes:
+  rabbitmq:
+networks:
+  backend:
+  

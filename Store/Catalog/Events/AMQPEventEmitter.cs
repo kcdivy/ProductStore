@@ -17,8 +17,10 @@ namespace Catalog.Events
 
         private ConnectionFactory connectionFactory;
 
+        private string queueName;
+
         public AMQPEventEmitter(ILogger<AMQPEventEmitter> logger,
-            AMQPOptions amqpOptions)
+            AMQPOptions amqpOptions, QueueOptions queueOptions)
         {
             this.logger = logger;
             this.rabbitOptions = amqpOptions;
@@ -30,11 +32,9 @@ namespace Catalog.Events
             connectionFactory.VirtualHost = rabbitOptions.VirtualHost;
             connectionFactory.HostName = rabbitOptions.HostName;
             connectionFactory.Uri = new Uri(rabbitOptions.Uri);//rabbitOptions.Uri;
-
+            queueName = queueOptions.ProductAddedEventQueueName;
             logger.LogInformation("AMQP Event Emitter configured with URI {0}", rabbitOptions.Uri);
         }
-        public const string QUEUE_NEWPRODUCT = "newproductadded";
-
 
         public void EmitProductAddedEvent(NewProductEvent newProductEvent)
         {
@@ -43,7 +43,7 @@ namespace Catalog.Events
                 using (IModel channel = conn.CreateModel())
                 {
                     channel.QueueDeclare(
-                        queue: QUEUE_NEWPRODUCT,
+                        queue: queueName,
                         durable: false,
                         exclusive: false,
                         autoDelete: false,
@@ -53,7 +53,7 @@ namespace Catalog.Events
                     var body = Encoding.UTF8.GetBytes(jsonPayload);
                     channel.BasicPublish(
                         exchange: "",
-                        routingKey: QUEUE_NEWPRODUCT,
+                        routingKey: queueName,
                         basicProperties: null,
                         body: body
                     );

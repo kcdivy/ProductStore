@@ -7,6 +7,8 @@ using Catalog.Repository;
 using Catalog.Models;
 using Catalog.Events;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.HttpOverrides;
+using System;
 
 namespace Catalog
 {
@@ -16,7 +18,7 @@ namespace Catalog
         {
             loggerFactory.AddConsole();
             loggerFactory.AddDebug();
-
+            Console.WriteLine($"content root : {env.ContentRootPath}");
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
@@ -32,8 +34,8 @@ namespace Catalog
         {
             services.AddMvc();
             services.AddSingleton<IProductRepository, ProductMemoryRepository>();
-
-            services.AddSingleton<AMQPOptions>();
+            services.Configure<AMQPOptions>(Configuration.GetSection("amqp"));
+            services.Configure<QueueOptions>(Configuration.GetSection("QueueOptions"));
             services.AddSingleton(typeof(IEventEmitter), typeof(AMQPEventEmitter));
             services.AddSingleton(typeof(ICommandEventConverter), typeof(CommandEventConverter));
 
@@ -45,6 +47,10 @@ namespace Catalog
             ILoggerFactory loggerFactory,
             IEventEmitter eventEmitter)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             // Asked for instances of singletons during Startup
             // to force initialization early.
             app.UseDefaultFiles(new DefaultFilesOptions
@@ -52,6 +58,7 @@ namespace Catalog
                 DefaultFileNames = new List<string> { "index.html" }
             });
 
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
 
